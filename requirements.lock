@@ -1,0 +1,5 @@
+ahocorapy==1.6.1
+beacontools==2.0.2
+construct==2.10.56
+future==0.18.2
+PyBluez==0.23
