@@ -1,49 +1,20 @@
-FROM python:3.9.0-buster as build-stage
+FROM balenalib/raspberrypi4-64-python:3.8.5-buster-run
 
-WORKDIR /opt/app
+WORKDIR /usr/src/app
 
-COPY requirements.lock /opt/app
+ENV UDEV=1
 
-RUN apt-get update \
-&& apt-get install unixodbc -y \
+RUN install_packages unixodbc \
 unixodbc-dev \
 tdsodbc \
-&& apt-get install --reinstall build-essential -y \
-&& apt-get install python-dateutil -y \
-&& apt-get -y clean
-RUN pip3 install -r /opt/app/requirements.lock
-
-FROM python:3.9.0-slim-buster
-
-WORKDIR /opt/app
-
-COPY --from=build-stage /root/.cache/pip /opt/app/.cache/pip
-COPY --from=build-stage /opt/app/requirements.lock /opt/app
-
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libodbc.so.2 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libodbcinst.so.2 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libkrb5.so.3 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libltdl.so.7 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libk5crypto.so.3 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libkrb5support.so.0 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /lib/x86_64-linux-gnu/libkeyutils.so.1 /lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libk5crypto.so.3 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /usr/lib/x86_64-linux-gnu/libkrb5support.so.0 /usr/lib/x86_64-linux-gnu/
-COPY --from=build-stage /lib/x86_64-linux-gnu/libkeyutils.so.1 /lib/x86_64-linux-gnu/
-
-RUN apt-get update \
-&& apt-get install unixodbc -y \
-unixodbc-dev \
-tdsodbc \
-python-dateutil \
+python3-dateutil \
 bluez \
 libbluetooth-dev \
-&& apt-get -y clean \
-&& apt-get -y autoremove
+gcc
 
-RUN pip3 install -r /opt/app/requirements.lock \
-&& rm -rf /opt/app/.cache/pip
+COPY requirements.lock requirements.lock
+RUN pip install -r requirements.lock
 
-COPY . .
-#CMD ['python', '/opt/app/main.py']
+COPY . ./
+
+CMD ["python","-u","src/main.py"]

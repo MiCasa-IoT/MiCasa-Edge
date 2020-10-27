@@ -4,7 +4,8 @@ services:
     restart: always
     build: .
     container_name: 'micasa-edge'
-    working_dir: '/opt/app/'
+    working_dir: '/usr/src/app'
+    privileged: true
     tty: true
     volumes:
-      - ./:/opt/app
+      - ./:/usr/src/app
