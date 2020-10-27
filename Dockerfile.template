@@ -1,4 +1,4 @@
-FROM balenalib/raspberrypi4-64-python:3.8.5-buster-run
+FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3.8.5-buster-run
 
 WORKDIR /usr/src/app
 
