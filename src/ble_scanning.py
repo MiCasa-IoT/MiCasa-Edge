@@ -39,7 +39,7 @@ class Service:
 
 
 def submit(bt_addr):
-    param = {'uuid': bt_addr}
+    param = {'uuid': bt_addr, 'edge_id': os.getenv("EDGE_ID")}
     response = requests.post(os.getenv("API_HOST"), data=param)
     if response.status_code == 200:
         print(Fore.LIGHTWHITE_EX + Back.LIGHTGREEN_EX + " OK {0} {1}".format(Back.RESET, response.text))
