@@ -1,5 +1,7 @@
 ahocorapy==1.6.1
 beacontools==2.0.2
+colorama==0.4.4
 construct==2.10.56
 future==0.18.2
+requests==2.24.0
 PyBluez==0.23

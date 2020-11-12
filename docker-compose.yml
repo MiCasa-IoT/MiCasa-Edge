@@ -1,10 +1,19 @@
-version: '3'
+version: '2.1'
+networks: {}
+volumes:
+  resin-data: {}
 services:
-  app:
+  main:
+    build:
+      context: .
+    privileged: true
     restart: always
-    build: .
-    container_name: 'micasa-edge'
-    working_dir: '/opt/app/'
-    tty: true
+    network_mode: host
     volumes:
-      - ./:/opt/app
+      - 'resin-data:/data'
+    labels:
+      io.balena.features.kernel-modules: '1'
+      io.balena.features.firmware: '1'
+      io.balena.features.dbus: '1'
+      io.balena.features.supervisor-api: '1'
+      io.balena.features.balena-api: '1'
