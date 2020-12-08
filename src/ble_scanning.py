@@ -15,7 +15,7 @@ class Service:
 
     def callback(self, bt_addr, rssi, packet, additional_info):
         current_time = time.perf_counter()
-        self.connected_history.setdefault(bt_addr, current_time)
+        self.connected_history.setdefault(additional_info['uuid'], current_time)
 
     def start(self):
         is_scanned = False
@@ -38,8 +38,8 @@ class Service:
                 is_scanned = False
 
 
-def submit(bt_addr):
-    param = {'uuid': bt_addr, 'edge_id': os.getenv("EDGE_ID")}
+def submit(uuid):
+    param = {'uuid': uuid, 'edge_id': os.getenv("EDGE_ID")}
     response = requests.post(os.getenv("API_HOST"), data=param)
     if response.status_code == 200:
         print(Fore.LIGHTWHITE_EX + Back.LIGHTGREEN_EX + " OK {0} {1}".format(Back.RESET, response.text))
