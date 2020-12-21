@@ -1,6 +1,7 @@
 import time
 import os
 import requests
+import json
 from colorama import Fore, Back, init
 from beacontools import BeaconScanner, IBeaconAdvertisement
 
@@ -39,7 +40,7 @@ class Service:
 
 
 def submit(uuid):
-    param = {'uuid': uuid, 'edge_id': os.getenv("EDGE_ID")}
-    response = requests.post(os.getenv("API_HOST"), data=param)
+    param = {"uuid": uuid, "edge_id": int(os.getenv("EDGE_ID"))}
+    response = requests.post(os.getenv("API_HOST"), data=json.dumps(param))
     if response.status_code == 200:
         print(Fore.LIGHTWHITE_EX + Back.LIGHTGREEN_EX + " OK {0} {1}".format(Back.RESET, response.text))
